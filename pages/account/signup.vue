@@ -1,11 +1,10 @@
 <template>
-  <div>
-    註冊會員
-  </div>
+  <NuxtLayout name="account">
+    <div>
+      註冊會員
+    </div>
+  </NuxtLayout>
 </template>
 
 <script setup>
-definePageMeta({
-  layout: 'account'
-});
 </script>

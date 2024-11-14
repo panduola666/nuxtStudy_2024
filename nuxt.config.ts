@@ -8,11 +8,14 @@ export default defineNuxtConfig({
     typeCheck: true
   },
    modules: ['@samk-dev/nuxt-vcalendar', 'nuxt-swiper', '@nuxt/icon'],
-  //  icon: {
-  //   serverBundle: {
-  //     collections: ['bi', 'mdi'] // <!--- this
-  //   }
-  // },
+   icon: {
+    serverBundle: {
+      collections: ['bi', 'mdi', 'ic'] // <!--- this
+    }
+  },
+  swiper: {
+    // modules: ['navigation', 'pagination', 'autoplay'], // all modules are imported by default
+  },
   css: [
     '@/assets/css/app.scss'
   ],

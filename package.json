@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@iconify-json/bi": "^1.2.1",
+    "@iconify-json/ic": "^1.2.1",
     "@iconify-json/mdi": "^1.2.1",
     "@samk-dev/nuxt-vcalendar": "^1.0.4",
     "sass": "^1.69.5",

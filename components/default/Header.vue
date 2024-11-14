@@ -98,8 +98,6 @@ const isTransparentRoute = computed(() =>
 const isScrolled = ref(false);
 
 const handleScroll = () => {
-console.log(route.name);
-
   isScrolled.value = window.scrollY > 50;
 };
 
