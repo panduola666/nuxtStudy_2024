@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <h1>Page: 首頁</h1>
     <p>目前路由的路徑 - route.fullPath 為: {{ route.fullPath }}</p>
     <button type="button" class="btn btn-primary">Primary</button>

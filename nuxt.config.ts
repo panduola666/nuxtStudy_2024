@@ -7,7 +7,12 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
-   modules: ['@samk-dev/nuxt-vcalendar', 'nuxt-swiper'],
+   modules: ['@samk-dev/nuxt-vcalendar', 'nuxt-swiper', '@nuxt/icon'],
+  //  icon: {
+  //   serverBundle: {
+  //     collections: ['bi', 'mdi'] // <!--- this
+  //   }
+  // },
   css: [
     '@/assets/css/app.scss'
   ],
