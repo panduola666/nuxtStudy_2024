@@ -10,7 +10,7 @@ export default defineNuxtConfig({
    modules: ['@samk-dev/nuxt-vcalendar', 'nuxt-swiper', '@nuxt/icon'],
    icon: {
     serverBundle: {
-      collections: ['bi', 'mdi', 'ic'] // <!--- this
+      collections: ['bi', 'mdi', 'ic', 'fluent', 'material-symbols'] // <!--- this
     }
   },
   swiper: {
