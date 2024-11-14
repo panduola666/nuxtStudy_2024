@@ -7,4 +7,13 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
+   modules: ['@samk-dev/nuxt-vcalendar', 'nuxt-swiper'],
+  css: [
+    '@/assets/css/app.scss'
+  ],
+  postcss: { // CSS 屬性加上瀏覽器相容性前綴
+    plugins: {
+        autoprefixer: {}
+    }
+  }
 })

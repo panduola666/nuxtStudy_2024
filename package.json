@@ -10,11 +10,15 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "nuxt": "^3.13.2",
+    "nuxt-swiper": "^1.2.2",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@samk-dev/nuxt-vcalendar": "^1.0.4",
+    "sass": "^1.69.5",
     "vue-tsc": "^2.1.10"
   }
 }
