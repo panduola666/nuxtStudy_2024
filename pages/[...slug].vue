@@ -1,6 +1,6 @@
 <template>
   <h1>404 Not Found</h1>
-   <p>你所請求的頁面：{{ route.params.slug.join('/') }}，不存在。</p>
+  <p>你所請求的頁面：{{ route.params.slug.join('/') }}，不存在。</p>
 </template>
 
 <script setup>

@@ -25,10 +25,10 @@
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <Icon class="fs-1" name="mdi:close"/>
+          <Icon class="fs-1" name="mdi:close" />
           <Icon class="fs-5" name="mdi:menu" />
         </button>
-        <div id="navbar" class="collapse navbar-collapse" >
+        <div id="navbar" class="collapse navbar-collapse">
           <ul class="navbar-nav gap-4 ms-auto fw-bold">
             <li class="nav-item">
               <NuxtLink
@@ -55,10 +55,14 @@
                   style="right: 0; left: auto; border-radius: 20px"
                 >
                   <li>
-                    <NuxtLink class="dropdown-item px-6 py-4" to="#">我的帳戶</NuxtLink>
+                    <NuxtLink class="dropdown-item px-6 py-4" to="#"
+                      >我的帳戶</NuxtLink
+                    >
                   </li>
                   <li>
-                    <NuxtLink class="dropdown-item px-6 py-4" to="#">登出</NuxtLink>
+                    <NuxtLink class="dropdown-item px-6 py-4" to="#"
+                      >登出</NuxtLink
+                    >
                   </li>
                 </ul>
               </div>
