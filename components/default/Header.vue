@@ -55,12 +55,14 @@
                   style="right: 0; left: auto; border-radius: 20px"
                 >
                   <li>
-                    <NuxtLink class="dropdown-item px-6 py-4" to="#"
+                    <NuxtLink
+                      to="user/a/profile"
+                      class="dropdown-item px-6 py-4"
                       >我的帳戶</NuxtLink
                     >
                   </li>
                   <li>
-                    <NuxtLink class="dropdown-item px-6 py-4" to="#"
+                    <NuxtLink to="/" class="dropdown-item px-6 py-4"
                       >登出</NuxtLink
                     >
                   </li>
