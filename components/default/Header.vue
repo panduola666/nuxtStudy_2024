@@ -56,7 +56,7 @@
                 >
                   <li>
                     <NuxtLink
-                      to="user/a/profile"
+                      to="/user/a/profile"
                       class="dropdown-item px-6 py-4"
                       >我的帳戶</NuxtLink
                     >

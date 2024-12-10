@@ -1,5 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
+const config : any = {
+  runtimeConfig: { // 環境變數
+    public: {
+      apiUrl: '',
+    },
+  },
+  vite: {
+    server: {
+      proxy: {
+        '/api/v1': {
+          target: 'https://nuxr3.zeabur.app',
+          changeOrigin: true
+        }
+      }
+    }
+  },
+  app: {
+    pageTransition: {name: 'page', mode: 'out-in'}
+  },
   // compatibilityDate 屬性 : 將 Nuxt3 的功能和行為鎖定在 2024-04-03 之前的版本，
   // 避免之後 Nuxt3 新版本的寫法調整會影響到目前專案的運作
   compatibilityDate: '2024-04-03',
@@ -7,7 +25,7 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
-   modules: ['@samk-dev/nuxt-vcalendar', 'nuxt-swiper', '@nuxt/icon'],
+   modules: ['@samk-dev/nuxt-vcalendar', 'nuxt-swiper', '@nuxt/icon', '@pinia/nuxt'],
    icon: {
     serverBundle: {
       collections: ['bi', 'mdi', 'ic', 'fluent', 'material-symbols'] // <!--- this
@@ -24,4 +42,15 @@ export default defineNuxtConfig({
         autoprefixer: {}
     }
   }
-})
+}
+
+if(process.env.NODE_ENV === 'development') {
+  config.vite.server.proxy = {
+    '/api/v1': {
+      target: 'https://nuxr3.zeabur.app',
+      changeOrigin: true
+    }
+  }
+}
+
+export default defineNuxtConfig(config)

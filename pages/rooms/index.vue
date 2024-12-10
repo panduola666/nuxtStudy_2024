@@ -31,8 +31,8 @@ const roomImages = computed(() => {
 </script>
 
 <template>
-  <NuxtLayout name="default">
-    <main>
+  <main>
+    <NuxtLayout name="default">
       <section class="hero position-relative">
         <Swiper
           :modules="modules"
@@ -469,8 +469,8 @@ const roomImages = computed(() => {
           </ul>
         </div>
       </section>
-    </main>
-  </NuxtLayout>
+    </NuxtLayout>
+  </main>
 </template>
 
 <style lang="scss" scoped>
