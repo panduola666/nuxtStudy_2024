@@ -6,35 +6,25 @@
           <div class="d-none d-md-block position-relative">
             <div class="d-flex gap-2 rounded-3xl overflow-hidden">
               <div style="width: 52.5vw">
-                <img
-                  class="w-100"
-                  src="public/images/room-a-1.png"
-                  alt="room-a-1"
-                />
+                <img class="w-100" :src="roomInfo.imageUrl" alt="room-a-1" />
               </div>
               <div class="d-flex flex-wrap gap-md-2" style="width: 42.5vw">
                 <div class="d-flex gap-md-2">
                   <img
+                    v-for="(img, index) in roomImg.top"
+                    :key="index"
                     class="w-50"
-                    src="public/images/room-a-2.png"
-                    alt="room-a-2"
-                  />
-                  <img
-                    class="w-50"
-                    src="public/images/room-a-3.png"
-                    alt="room-a-3"
+                    :src="img"
+                    :alt="`top${index}`"
                   />
                 </div>
                 <div class="d-flex gap-md-2">
                   <img
+                    v-for="(img, index) in roomImg.bottom"
+                    :key="index"
                     class="w-50"
-                    src="public/images/room-a-4.png"
-                    alt="room-a-4"
-                  />
-                  <img
-                    class="w-50"
-                    src="public/images/room-a-5.png"
-                    alt="room-a-5"
+                    :src="img"
+                    :alt="`top${index}`"
                   />
                 </div>
               </div>
@@ -48,11 +38,7 @@
             </button>
           </div>
           <div class="d-md-none position-relative">
-            <img
-              class="img-fluid"
-              src="public/images/room-a-1.png"
-              alt="room-a-1"
-            />
+            <img class="img-fluid" :src="roomInfo.imageUrl" alt="room-a-1" />
             <button
               class="position-absolute btn btn-primary-10 px-8 py-4 text-primary-100 border-primary-100 fw-bold rounded-3"
               style="bottom: 23px; right: 12px"
@@ -68,9 +54,11 @@
             <div class="row">
               <div class="col-12 col-md-7 d-flex flex-column gap-6 gap-md-20">
                 <div>
-                  <h1 class="mb-4 text-neutral-100 fw-bold">尊爵雙人房</h1>
+                  <h1 class="mb-4 text-neutral-100 fw-bold">
+                    {{ roomInfo.name }}
+                  </h1>
                   <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-medium">
-                    享受高級的住宿體驗，尊爵雙人房提供給您舒適寬敞的空間和精緻的裝潢。
+                    {{ roomInfo.description }}
                   </p>
                 </div>
 
@@ -89,7 +77,7 @@
                         name="fluent:slide-size-24-filled"
                       />
                       <p class="mb-0 fw-bold text-neutral-80 text-nowrap">
-                        24 坪
+                        {{ roomInfo.areaInfo }}
                       </p>
                     </li>
                     <li
@@ -100,7 +88,7 @@
                         name="material-symbols:king-bed"
                       />
                       <p class="mb-0 fw-bold text-neutral-80 text-nowrap">
-                        1 張大床
+                        {{ roomInfo.bedInfo }}
                       </p>
                     </li>
                     <li
@@ -111,7 +99,7 @@
                         name="ic:baseline-person"
                       />
                       <p class="mb-0 fw-bold text-neutral-80 text-nowrap">
-                        2-4 人
+                        {{ roomInfo.maxPeople }} 人
                       </p>
                     </li>
                   </ul>
@@ -126,40 +114,20 @@
                   <ul
                     class="d-flex flex-wrap gap-6 gap-md-10 p-6 bg-neutral-0 fs-8 fs-md-7 rounded-3 list-unstyled"
                   >
-                    <li class="d-flex gap-2">
+                    <li
+                      class="d-flex gap-2"
+                      v-for="(layout, layoutIndex) in roomInfo.layoutInfo"
+                      :key="layoutIndex"
+                    >
                       <Icon
                         class="fs-5 text-primary-100"
-                        name="material-symbols:check"
+                        :name="`material-symbols:${
+                          layout.isProvide ? 'check' : 'close'
+                        }`"
                       />
-                      <p class="mb-0 text-neutral-80 fw-bold">市景</p>
-                    </li>
-                    <li class="d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">獨立衛浴</p>
-                    </li>
-                    <li class="d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">客廳</p>
-                    </li>
-                    <li class="d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">書房</p>
-                    </li>
-                    <li class="d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">樓層電梯</p>
+                      <p class="mb-0 text-neutral-80 fw-bold">
+                        {{ layout.title }}
+                      </p>
                     </li>
                   </ul>
                 </section>
@@ -173,75 +141,20 @@
                   <ul
                     class="d-flex flex-wrap row-gap-2 column-gap-10 p-6 mb-0 bg-neutral-0 fs-8 fs-md-7 rounded-3 list-unstyled"
                   >
-                    <li class="flex-item d-flex gap-2">
+                    <li
+                      class="flex-item d-flex gap-2"
+                      v-for="(facility, facilityIndex) in roomInfo.facilityInfo"
+                      :key="facilityIndex"
+                    >
                       <Icon
                         class="fs-5 text-primary-100"
-                        name="material-symbols:check"
+                        :name="`material-symbols:${
+                          facility.isProvide ? 'check' : 'close'
+                        }`"
                       />
-                      <p class="mb-0 text-neutral-80 fw-bold">平面電視</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">吹風機</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">冰箱</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">熱水壺</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">檯燈</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">衣櫃</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">除濕機</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">浴缸</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">書桌</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">音響</p>
+                      <p class="mb-0 text-neutral-80 fw-bold">
+                        {{ facility.title }}
+                      </p>
                     </li>
                   </ul>
                 </section>
@@ -255,75 +168,20 @@
                   <ul
                     class="d-flex flex-wrap row-gap-2 column-gap-10 p-6 mb-0 bg-neutral-0 fs-8 fs-md-7 rounded-3 list-unstyled"
                   >
-                    <li class="flex-item d-flex gap-2">
+                    <li
+                      class="flex-item d-flex gap-2"
+                      v-for="(amenity, amenityIndex) in roomInfo.amenityInfo"
+                      :key="amenityIndex"
+                    >
                       <Icon
                         class="fs-5 text-primary-100"
-                        name="material-symbols:check"
+                        :name="`material-symbols:${
+                          amenity.isProvide ? 'check' : 'close'
+                        }`"
                       />
-                      <p class="mb-0 text-neutral-80 fw-bold">衛生紙</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">拖鞋</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">沐浴用品</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">清潔用品</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">刮鬍刀</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">吊衣架</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">浴巾</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">刷牙用品</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">罐裝水</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">梳子</p>
+                      <p class="mb-0 text-neutral-80 fw-bold">
+                        {{ amenity.title }}
+                      </p>
                     </li>
                   </ul>
                 </section>
@@ -362,6 +220,7 @@
                   </ol>
                 </section>
               </div>
+
               <div class="d-none d-md-block col-md-5">
                 <div
                   class="rounded-3xl position-sticky d-flex flex-column gap-10 p-10 ms-auto bg-neutral-0"
@@ -374,9 +233,9 @@
                   </h5>
 
                   <div class="text-neutral-80">
-                    <h2 class="fw-bold">尊爵雙人房</h2>
+                    <h2 class="fw-bold">{{ roomInfo.name }}</h2>
                     <p class="mb-0 fw-medium">
-                      享受高級的住宿體驗，尊爵雙人房提供給您舒適寬敞的空間和精緻的裝潢。
+                      {{ roomInfo.description }}
                     </p>
                   </div>
 
@@ -467,16 +326,21 @@
                     </div>
                   </div>
 
-                  <h5 class="mb-0 text-primary-100 fw-bold">NT$ 10,000</h5>
-                  <NuxtLink
-                    :to="{
-                      name: 'rooms-roomId-booking',
-                      params: { roomId: $route.params.roomId },
+                  <h5 class="mb-0 text-primary-100 fw-bold">
+                    NT$ {{ useMoneyFormat(roomInfo.price) }}
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn btn-primary-100 py-4 fw-bold rounded-3"
+                    :class="{
+                      'bookDisabled text-black': bookingDisabled,
+                      'text-neutral-0': !bookingDisabled,
                     }"
-                    class="btn btn-primary-100 py-4 text-neutral-0 fw-bold rounded-3"
+                    @click="bookingNow"
+                    :disabled="bookingDisabled"
                   >
                     立即預訂
-                  </NuxtLink>
+                  </button>
                 </div>
               </div>
             </div>
@@ -486,7 +350,9 @@
             class="d-flex d-md-none justify-content-between align-items-center position-fixed bottom-0 w-100 p-3 bg-neutral-0"
           >
             <template v-if="bookingDate.date.end === null">
-              <small class="text-neutral-80 fw-medium">ＮＴ$ 10,000 / 晚</small>
+              <small class="text-neutral-80 fw-medium"
+                >ＮＴ$ {{ useMoneyFormat(roomInfo.price) }} / 晚</small
+              >
               <button
                 class="btn btn-primary-100 px-12 py-4 text-neutral-0 fw-bold rounded-3"
                 type="button"
@@ -499,8 +365,8 @@
             <template v-else>
               <div class="d-flex flex-column gap-1">
                 <small class="text-neutral-80 fw-medium"
-                  >ＮＴ$ 10,000 / {{ daysCount }} 晚 /
-                  {{ bookingPeople }} 人</small
+                  >ＮＴ$ {{ useMoneyFormat(roomInfo.price) }} /
+                  {{ daysCount }} 晚 / {{ bookingPeople }} 人</small
                 >
                 <span
                   class="text-neutral fs-9 fw-medium text-decoration-underline"
@@ -508,15 +374,18 @@
                   {{ daysFormatOnMobile(bookingDate.date?.end) }}</span
                 >
               </div>
-              <NuxtLink
-                :to="{
-                  name: 'rooms-roomId-booking',
-                  params: { roomId: $route.params.roomId },
+              <button
+                type="button"
+                class="btn btn-primary-100 px-12 py-4 fw-bold rounded-3"
+                @click="bookingNow"
+                :disabled="bookingDisabled"
+                :class="{
+                  'bookDisabled text-black': bookingDisabled,
+                  'text-neutral-0': !bookingDisabled,
                 }"
-                class="btn btn-primary-100 px-12 py-4 text-neutral-0 fw-bold rounded-3"
               >
                 立即預訂
-              </NuxtLink>
+              </button>
             </template>
           </div>
         </section>
@@ -532,6 +401,30 @@
 </template>
 
 <script setup>
+const roomsStore = useRoomsStore();
+const { roomInfo, bookingInfo } = storeToRefs(roomsStore);
+
+const route = useRoute();
+const roomId = route.params.roomId;
+onMounted(() => {
+  if (roomId) {
+    roomsStore.getRoomInfo(roomId);
+  }
+});
+
+const roomImg = computed(() => {
+  const obj = {
+    top: [],
+    bottom: [],
+  };
+
+  if (Array.isArray(roomInfo.value.imageUrlList)) {
+    obj.top = roomInfo.value.imageUrlList.slice(0, 2);
+    obj.bottom = roomInfo.value.imageUrlList.slice(2, 4);
+  }
+  return obj;
+});
+
 const datePickerModal = ref(null);
 
 const openModal = () => {
@@ -569,6 +462,21 @@ const handleDateChange = (bookingInfo) => {
 
   bookingPeople.value = bookingInfo?.people || 1;
   daysCount.value = bookingInfo.daysCount;
+};
+
+const bookingDisabled = computed(
+  () => !bookingDate.date.start || !bookingDate.date.end
+);
+const bookingNow = () => {
+  if (bookingDisabled.value) return;
+  bookingInfo.value.start = bookingDate.date.start;
+  bookingInfo.value.end = bookingDate.date.end;
+  bookingInfo.value.bookingPeople = bookingPeople.value;
+  bookingInfo.value.daysCount = daysCount.value;
+  useRouter().push({
+    name: 'rooms-roomId-booking',
+    params: { roomId },
+  });
 };
 </script>
 
@@ -619,5 +527,10 @@ $grid-breakpoints: (
 
 input[type='date'] {
   cursor: pointer;
+}
+
+.bookDisabled {
+  background: #ececec;
+  border-color: #ececec;
 }
 </style>

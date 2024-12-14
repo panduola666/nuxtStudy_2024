@@ -14,7 +14,7 @@
                   <Icon name="material-symbols:check" />
                 </div>
                 <div class="text-neutral-0 fs-1">
-                  <h1 class="fw-bold">恭喜，Jessica！</h1>
+                  <h1 class="fw-bold">恭喜，{{ userInfo.name }}！</h1>
                   <p class="mb-0 fw-bold">您已預訂成功</p>
                 </div>
               </div>
@@ -28,12 +28,12 @@
                 <h2 class="mb-6 mb-md-10 text-neutral-0 fs-7 fs-md-5 fw-bold">
                   立即查看您的訂單紀錄
                 </h2>
-                <button
+                <NuxtLink
+                  :to="`/user/${userInfo._id}/order`"
                   class="btn btn-primary-100 px-md-15 py-4 text-neutral-0 fw-bold border-0 rounded-3"
-                  type="button"
                 >
                   前往我的訂單
-                </button>
+                </NuxtLink>
               </div>
 
               <hr class="my-10 my-md-20 opacity-100 text-neutral-40" />
@@ -44,15 +44,21 @@
               <div class="d-flex flex-column gap-6">
                 <div>
                   <p class="mb-2 text-neutral-40 fw-medium">姓名</p>
-                  <span class="text-neutral-0 fw-bold">Jessica Ｗang</span>
+                  <span class="text-neutral-0 fw-bold">{{
+                    orderInfo?.userInfo.name
+                  }}</span>
                 </div>
                 <div>
                   <p class="mb-2 text-neutral-40 fw-medium">手機號碼</p>
-                  <span class="text-neutral-0 fw-bold">+886 912 345 678</span>
+                  <span class="text-neutral-0 fw-bold">{{
+                    orderInfo?.userInfo.phone
+                  }}</span>
                 </div>
                 <div>
                   <p class="mb-2 text-neutral-40 fw-medium">電子信箱</p>
-                  <span class="text-neutral-0 fw-bold">jessica@sample.com</span>
+                  <span class="text-neutral-0 fw-bold">{{
+                    orderInfo?.userInfo.email
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -81,25 +87,27 @@
                   <h3
                     class="d-flex align-items-center mb-6 text-neutral-80 fs-8 fs-md-6 fw-bold"
                   >
-                    <p class="mb-0">尊爵雙人房，1 晚</p>
+                    <p class="mb-0">{{ roomInfo.name }}，{{ dateCount }} 晚</p>
                     <span
                       class="d-inline-block mx-4 bg-neutral-80"
                       style="width: 1px; height: 18px"
                     />
-                    <p class="mb-0">住宿人數：2 位</p>
+                    <p class="mb-0">住宿人數：{{ orderInfo.peopleNum }} 位</p>
                   </h3>
 
                   <div class="text-neutral-80 fs-8 fs-md-7 fw-bold">
                     <p class="title-deco mb-2">
-                      入住：6 月 10 日星期二，15:00 可入住
+                      入住：{{ timeFormat(orderInfo.checkInDate) }}，15:00
+                      可入住
                     </p>
                     <p class="title-deco mb-0">
-                      退房：6 月 11 日星期三，12:00 前退房
+                      退房：{{ timeFormat(orderInfo.checkOutDate) }}，12:00
+                      前退房
                     </p>
                   </div>
 
                   <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-bold">
-                    NT$ 10,000
+                    NT$ {{ useMoneyFormat(roomInfo.price * dateCount) }}
                   </p>
                 </section>
 
@@ -114,75 +122,20 @@
                   <ul
                     class="d-flex flex-wrap row-gap-2 column-gap-10 p-6 mb-0 fs-8 fs-md-7 bg-neutral-0 border border-neutral-40 rounded-3 list-unstyled"
                   >
-                    <li class="flex-item d-flex gap-2">
+                    <li
+                      class="flex-item d-flex gap-2"
+                      v-for="(facility, index) in roomInfo.facilityInfo"
+                      :key="index"
+                    >
                       <Icon
                         class="fs-5 text-primary-100"
-                        name="material-symbols:check"
+                        :name="`material-symbols:${
+                          facility.isProvide ? 'check' : 'close'
+                        }`"
                       />
-                      <p class="mb-0 text-neutral-80 fw-bold">電視</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">吹風機</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">冰箱</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">熱水壺</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">檯燈</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">衣櫃</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">除濕機</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">浴缸</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">書桌</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">音響</p>
+                      <p class="mb-0 text-neutral-80 fw-bold">
+                        {{ facility.title }}
+                      </p>
                     </li>
                   </ul>
                 </section>
@@ -196,75 +149,20 @@
                   <ul
                     class="d-flex flex-wrap row-gap-2 column-gap-10 p-6 mb-0 fs-8 fs-md-7 bg-neutral-0 border border-neutral-40 rounded-3 list-unstyled"
                   >
-                    <li class="flex-item d-flex gap-2">
+                    <li
+                      class="flex-item d-flex gap-2"
+                      v-for="(amenity, index) in roomInfo.amenityInfo"
+                      :key="index"
+                    >
                       <Icon
                         class="fs-5 text-primary-100"
-                        name="material-symbols:check"
+                        :name="`material-symbols:${
+                          amenity.isProvide ? 'check' : 'close'
+                        }`"
                       />
-                      <p class="mb-0 text-neutral-80 fw-bold">衛生紙</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">沐浴用品</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">拖鞋</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">刮鬍刀</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">清潔用品</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">吊衣架</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">浴巾</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">刷牙用品</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">罐裝水</p>
-                    </li>
-                    <li class="flex-item d-flex gap-2">
-                      <Icon
-                        class="fs-5 text-primary-100"
-                        name="material-symbols:check"
-                      />
-                      <p class="mb-0 text-neutral-80 fw-bold">梳子</p>
+                      <p class="mb-0 text-neutral-80 fw-bold">
+                        {{ amenity.title }}
+                      </p>
                     </li>
                   </ul>
                 </section>
@@ -291,6 +189,33 @@
 <script setup>
 const route = useRoute();
 const { bookingId } = route.params;
+const ordersStore = useOrdersStore();
+const { orderInfo } = storeToRefs(ordersStore);
+const userStore = useUserStore();
+const { userInfo } = storeToRefs(userStore);
+
+onMounted(() => {
+  ordersStore.getOrderInfo(bookingId);
+});
+
+const roomInfo = computed(() => orderInfo.value.roomId);
+console.log(orderInfo.value);
+
+const dateCount = computed(() => {
+  const start = orderInfo.value.checkInDate;
+  const end = orderInfo.value.checkOutDate;
+  const diff = new Date(start).valueOf() - new Date(end).valueOf();
+  return Math.abs(diff / 1000 / 60 / 60 / 24);
+});
+
+const timeFormat = (timer) => {
+  const month = new Date(timer).getMonth() + 1;
+  const date = new Date(timer).getDate();
+  const day = new Date(timer).getDay();
+  const days = ['日', '一', '二', '三', '四', '五', '六'];
+
+  return `${month} 月 ${date} 日星期${days[day]}`;
+};
 </script>
 
 <style lang="scss" scoped>

@@ -17,9 +17,9 @@
             <input
               id="email"
               class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
-              value="jessica@sample.com"
               placeholder="請輸入信箱"
               type="email"
+              v-model="reqParams.email"
             />
           </div>
           <div class="mb-4 fs-8 fs-md-7">
@@ -29,9 +29,9 @@
             <input
               id="password"
               class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
-              value="jessica@sample.com"
               placeholder="請輸入密碼"
               type="password"
+              v-model="reqParams.password"
             />
           </div>
           <div
@@ -43,6 +43,7 @@
                 class="form-check-input"
                 type="checkbox"
                 value=""
+                v-model="isRemember"
               />
               <label class="form-check-label fw-bold" for="remember">
                 記住帳號
@@ -58,6 +59,7 @@
           <button
             class="btn btn-primary-100 w-100 py-4 text-neutral-0 fw-bold"
             type="button"
+            @click="login"
           >
             會員登入
           </button>
@@ -77,7 +79,40 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const userStore = useUserStore();
+const { isLogin } = storeToRefs(userStore);
+
+const reqParams = ref({
+  email: '',
+  password: '',
+});
+const login = async () => {
+  rememberEmail();
+  await userStore.login(reqParams.value);
+
+  if (isLogin.value) {
+    useRouter().push('/');
+  }
+};
+
+const isRemember = ref(false);
+const rememberEmail = () => {
+  if (isRemember.value) {
+    localStorage.setItem('email', reqParams.value.email);
+  } else {
+    localStorage.removeItem('email');
+  }
+  localStorage.setItem('isRemember', isRemember.value);
+};
+onMounted(() => {
+  if (JSON.parse(localStorage.getItem('isRemember'))) {
+    isRemember.value = true;
+    reqParams.value.email = localStorage.getItem('email');
+  }
+});
+watch(isRemember, rememberEmail);
+</script>
 
 <style lang="scss" scoped>
 @import 'bootstrap/scss/mixins/breakpoints';

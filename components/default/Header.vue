@@ -41,14 +41,14 @@
               </NuxtLink>
             </li>
             <li class="d-none d-md-block nav-item">
-              <div class="btn-group">
+              <div class="btn-group" v-if="isLogin">
                 <button
                   type="button"
                   class="nav-link d-flex gap-2 p-4 text-neutral-0"
                   data-bs-toggle="dropdown"
                 >
                   <Icon class="fs-5" name="mdi:account-circle-outline" />
-                  Jessica
+                  {{ userInfo.name }}
                 </button>
                 <ul
                   class="dropdown-menu py-3 overflow-hidden"
@@ -56,7 +56,7 @@
                 >
                   <li>
                     <NuxtLink
-                      to="/user/a/profile"
+                      :to="`/user/${userInfo._id}/profile`"
                       class="dropdown-item px-6 py-4"
                       >我的帳戶</NuxtLink
                     >
@@ -68,10 +68,20 @@
                   </li>
                 </ul>
               </div>
+              <NuxtLink
+                to="/account/login"
+                class="nav-link d-flex gap-2 p-4 text-neutral-0"
+                v-else
+              >
+                會員登入
+              </NuxtLink>
             </li>
             <li class="d-md-none nav-item">
-              <NuxtLink to="/" class="nav-link p-4 text-neutral-0">
-                會員登入
+              <NuxtLink
+                :to="isLogin ? `/user/${userInfo._id}/profile` : '/'"
+                class="nav-link p-4 text-neutral-0"
+              >
+                {{ isLogin ? '我的帳戶' : '會員登入' }}
               </NuxtLink>
             </li>
             <li class="nav-item">
@@ -92,9 +102,9 @@
 </template>
 
 <script setup>
-// import 'bootstrap/js/dist/collapse';
-// import 'bootstrap/js/dist/dropdown';
 const route = useRoute();
+const userStore = useUserStore();
+const { isLogin, userInfo } = storeToRefs(userStore);
 const transparentBgRoute = ['index', 'rooms'];
 
 const isTransparentRoute = computed(() =>

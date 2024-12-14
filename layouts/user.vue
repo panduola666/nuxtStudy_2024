@@ -24,7 +24,7 @@
                 src="@/assets/images/avatar-6.png"
                 alt="avatar"
               />
-              <h1 class="text-neutral-0 fw-bold">Hello，Jessica</h1>
+              <h1 class="text-neutral-0 fw-bold">Hello，{{ userInfo.name }}</h1>
             </div>
           </div>
         </section>
@@ -37,7 +37,7 @@
                   :to="{
                     name: 'user-userId-profile',
                     params: {
-                      userId: $route.params.userId,
+                      userId: userInfo._id,
                     },
                   }"
                   exact-active-class="text-primary-100"
@@ -51,7 +51,7 @@
                   :to="{
                     name: 'user-userId-order',
                     params: {
-                      userId: $route.params.userId,
+                      userId: userInfo._id,
                     },
                   }"
                   exact-active-class="text-primary-100"
@@ -82,7 +82,10 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const userStore = useUserStore();
+const { isLogin, userInfo } = storeToRefs(userStore);
+</script>
 
 <style lang="scss" scoped>
 @import 'bootstrap/scss/mixins/breakpoints';

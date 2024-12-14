@@ -59,6 +59,7 @@
                 class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
                 placeholder="hello@exsample.com"
                 type="email"
+                v-model="form.email"
               />
             </div>
             <div class="mb-4 fs-8 fs-md-7">
@@ -70,6 +71,7 @@
                 class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
                 placeholder="請輸入密碼"
                 type="password"
+                v-model="form.password"
               />
             </div>
             <div class="mb-10 fs-8 fs-md-7">
@@ -81,6 +83,7 @@
                 class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
                 placeholder="請再輸入一次密碼"
                 type="password"
+                v-model="form.checkPassword"
               />
             </div>
             <button
@@ -101,6 +104,7 @@
                 class="form-control p-4 text-neutral-100 fw-medium border-neutral-40 rounded-3"
                 placeholder="請輸入姓名"
                 type="text"
+                v-model="form.name"
               />
             </div>
             <div class="mb-4 fs-8 fs-md-7">
@@ -112,6 +116,7 @@
                 class="form-control p-4 text-neutral-100 fw-medium border-neutral-40 rounded-3"
                 placeholder="請輸入手機號碼"
                 type="tel"
+                v-model="form.phone"
               />
             </div>
             <div class="mb-4 fs-8 fs-md-7">
@@ -122,6 +127,7 @@
                 <select
                   id="birth"
                   class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                  v-model="birth.birth"
                 >
                   <option
                     v-for="year in 65"
@@ -133,6 +139,7 @@
                 </select>
                 <select
                   class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                  v-model="birth.month"
                 >
                   <option
                     v-for="month in 12"
@@ -144,6 +151,7 @@
                 </select>
                 <select
                   class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                  v-model="birth.day"
                 >
                   <option v-for="day in 30" :key="day" value="`${day} 日`">
                     {{ day }} 日
@@ -189,6 +197,7 @@
                 class="form-check-input"
                 type="checkbox"
                 value=""
+                v-model="form.isCheck"
               />
               <label class="form-check-label fw-bold" for="agreementCheck">
                 我已閱讀並同意本網站個資使用規範
@@ -219,6 +228,27 @@
 
 <script setup>
 const isEmailAndPasswordValid = ref(false);
+const userStore = useUserStore();
+
+const form = ref({
+  email: '',
+  password: '',
+  checkPassword: '',
+  name: '',
+  phone: '',
+  birthday: '', // YYYY/MM/DD
+  address: {
+    zipcode: 802,
+    detail: '文山路23號',
+  },
+  isCheck: false,
+});
+
+const birth = ref({
+  year: 1959,
+  month: 1,
+  day: 1,
+});
 </script>
 
 <style lang="scss" scoped>
