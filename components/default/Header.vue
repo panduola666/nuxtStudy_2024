@@ -62,7 +62,10 @@
                     >
                   </li>
                   <li>
-                    <NuxtLink to="/" class="dropdown-item px-6 py-4"
+                    <NuxtLink
+                      to="/"
+                      class="dropdown-item px-6 py-4"
+                      @click="signout"
                       >登出</NuxtLink
                     >
                   </li>
@@ -106,6 +109,8 @@ const route = useRoute();
 const userStore = useUserStore();
 const { isLogin, userInfo } = storeToRefs(userStore);
 const transparentBgRoute = ['index', 'rooms'];
+
+const signout = () => userStore.signout();
 
 const isTransparentRoute = computed(() =>
   transparentBgRoute.includes(route.name)

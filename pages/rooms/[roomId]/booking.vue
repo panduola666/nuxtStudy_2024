@@ -149,7 +149,7 @@
                           class="form-select w-50 p-4 text-neutral-80 fs-8 fs-md-7 fw-medium rounded-3"
                           v-model="form.userInfo.address.cityName"
                         >
-                          <option value="" selected>請選擇</option>
+                          <option value="" selected disabled>請選擇</option>
                           <option
                             :value="city.CityName"
                             v-for="(city, index) in cityCountyData"
@@ -162,10 +162,10 @@
                           class="form-select w-50 p-4 text-neutral-80 fs-8 fs-md-7 fw-medium rounded-3"
                           v-model="form.userInfo.address.zipcode"
                         >
-                          <option value="" selected>請選擇</option>
+                          <option value="" selected disabled>請選擇</option>
                           <option
                             :value="Number(area.ZipCode)"
-                            v-for="area in AreaList.AreaList"
+                            v-for="area in areaList.AreaList"
                             :key="area.ZipCode"
                           >
                             {{ area.AreaName }}
@@ -443,7 +443,7 @@ const setFormData = () => {
   });
 };
 
-const AreaList = computed(() => {
+const areaList = computed(() => {
   return (
     cityCountyData.find(
       (item) => item.CityName === form.value.userInfo.address.cityName

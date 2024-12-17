@@ -4,11 +4,28 @@ export const useUserStore = defineStore('user', () => {
   const userInfo = ref({});
   const isLogin = ref(false);
 
-  const signup = async () => {
-    const data = await $fetch('/api/v1/user/signup');
-    console.log(data);
-
-    // newsList.value = data.result;
+  const signup = async (body) => {
+    try {
+      await $fetch('/api/v1/user/signup', {
+        method: 'POST',
+        body,
+      });
+      const swal = await useSwal({
+        title: '註冊成功',
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      if (swal.isDismissed) {
+        useRouter().push('/account/login');
+      }
+    } catch (error) {
+      useSwal({
+        icon: 'error',
+        title: '註冊失敗',
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    }
   };
 
   const login = async (body) => {
@@ -78,9 +95,37 @@ export const useUserStore = defineStore('user', () => {
           authorization: useCookie('token').value || '',
         },
       });
-      console.log(res);
-    } catch (error) {}
+      userInfo.value = res.result;
+      useSwal({
+        title: '修改成功',
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    } catch (error) {
+      useSwal({
+        icon: 'error',
+        title: '修改失敗',
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    }
   };
+
+  const signout = async () => {
+    const swal = await useSwal({
+      title: '登出成功',
+      showConfirmButton: false,
+      timer: 3000,
+    });
+    if (swal.isDismissed) {
+      const token = useCookie('token');
+      token.value = null;
+      isLogin.value = false;
+      userInfo.value = {};
+      useRouter().push('/');
+    }
+  };
+
   return {
     userInfo,
     isLogin,
@@ -89,5 +134,6 @@ export const useUserStore = defineStore('user', () => {
     check,
     getUserInfo,
     updateUserInfo,
+    signout,
   };
 });

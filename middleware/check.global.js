@@ -5,7 +5,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (token) {
     userStore.check();
   }
-  if (isLogin) {
+
+  if (isLogin.value) {
     userStore.getUserInfo();
   }
 });

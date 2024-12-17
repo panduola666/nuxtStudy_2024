@@ -87,7 +87,12 @@
               />
             </div>
             <button
-              class="btn btn-neutral-40 w-100 py-4 text-neutral-60 fw-bold"
+              class="btn w-100 py-4 fw-bold"
+              :class="[
+                form.password === form.checkPassword
+                  ? 'btn-primary-100 text-neutral-0'
+                  : 'disabled btn-neutral-40 text-neutral-60',
+              ]"
               type="button"
               @click="isEmailAndPasswordValid = true"
             >
@@ -127,13 +132,9 @@
                 <select
                   id="birth"
                   class="form-select p-4 text-neutral-80 fw-medium rounded-3"
-                  v-model="birth.birth"
+                  v-model="birth.year"
                 >
-                  <option
-                    v-for="year in 65"
-                    :key="year"
-                    value="`${year + 1958} 年`"
-                  >
+                  <option v-for="year in 65" :key="year" :value="year + 1958">
                     {{ year + 1958 }} 年
                   </option>
                 </select>
@@ -141,11 +142,7 @@
                   class="form-select p-4 text-neutral-80 fw-medium rounded-3"
                   v-model="birth.month"
                 >
-                  <option
-                    v-for="month in 12"
-                    :key="month"
-                    value="`${month} 月`"
-                  >
+                  <option v-for="month in 12" :key="month" :value="month">
                     {{ month }} 月
                   </option>
                 </select>
@@ -153,7 +150,7 @@
                   class="form-select p-4 text-neutral-80 fw-medium rounded-3"
                   v-model="birth.day"
                 >
-                  <option v-for="day in 30" :key="day" value="`${day} 日`">
+                  <option v-for="day in 30" :key="day" :value="day">
                     {{ day }} 日
                   </option>
                 </select>
@@ -167,17 +164,29 @@
                 <div class="d-flex gap-2 mb-2">
                   <select
                     class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                    v-model="form.address.cityName"
                   >
-                    <option value="臺北市">臺北市</option>
-                    <option value="臺中市">臺中市</option>
-                    <option selected value="高雄市">高雄市</option>
+                    <option value="" selected disabled>請選擇</option>
+                    <option
+                      :value="city.CityName"
+                      v-for="(city, index) in cityCountyData"
+                      :key="index"
+                    >
+                      {{ city.CityName }}
+                    </option>
                   </select>
                   <select
                     class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                    v-model="form.address.zipcode"
                   >
-                    <option value="前金區">前金區</option>
-                    <option value="鹽埕區">鹽埕區</option>
-                    <option selected value="新興區">新興區</option>
+                    <option value="" selected disabled>請選擇</option>
+                    <option
+                      :value="Number(area.ZipCode)"
+                      v-for="area in areaList.AreaList"
+                      :key="area.ZipCode"
+                    >
+                      {{ area.AreaName }}
+                    </option>
                   </select>
                 </div>
                 <input
@@ -185,6 +194,7 @@
                   type="text"
                   class="form-control p-4 rounded-3"
                   placeholder="請輸入詳細地址"
+                  v-model="form.address.detail"
                 />
               </div>
             </div>
@@ -204,8 +214,14 @@
               </label>
             </div>
             <button
-              class="btn btn-primary-100 w-100 py-4 text-neutral-0 fw-bold"
+              class="btn w-100 py-4 fw-bold"
               type="button"
+              :class="[
+                form.isCheck
+                  ? 'btn-primary-100 text-neutral-0'
+                  : 'disabled btn-neutral-40 text-neutral-60',
+              ]"
+              @click="signup"
             >
               完成註冊
             </button>
@@ -227,6 +243,7 @@
 </template>
 
 <script setup>
+import cityCountyData from 'public/json/cityCountyData';
 const isEmailAndPasswordValid = ref(false);
 const userStore = useUserStore();
 
@@ -238,8 +255,9 @@ const form = ref({
   phone: '',
   birthday: '', // YYYY/MM/DD
   address: {
-    zipcode: 802,
-    detail: '文山路23號',
+    zipcode: '',
+    detail: '',
+    cityName: '',
   },
   isCheck: false,
 });
@@ -248,6 +266,19 @@ const birth = ref({
   year: 1959,
   month: 1,
   day: 1,
+});
+
+const signup = () => {
+  form.value.birthday = `${birth.value.year}/${birth.value.month}/${birth.value.day}`;
+  userStore.signup(form.value);
+};
+
+const areaList = computed(() => {
+  return (
+    cityCountyData.find(
+      (item) => item.CityName === form.value.address.cityName
+    ) || { AreaList: [] }
+  );
 });
 </script>
 

@@ -199,7 +199,6 @@ onMounted(() => {
 });
 
 const roomInfo = computed(() => orderInfo.value.roomId);
-console.log(orderInfo.value);
 
 const dateCount = computed(() => {
   const start = orderInfo.value.checkInDate;

@@ -12,7 +12,7 @@
                 <p class="mb-2 text-neutral-80 fw-medium">電子信箱</p>
                 <span
                   class="form-control pe-none p-0 text-neutral-100 fw-bold border-0"
-                  >Jessica@exsample.com</span
+                  >{{ form.email }}</span
                 >
               </div>
 
@@ -55,6 +55,7 @@
                     type="password"
                     class="form-control p-4 fs-7 rounded-3"
                     placeholder="請輸入舊密碼"
+                    v-model="password.oldPassword"
                   />
                 </div>
 
@@ -69,6 +70,7 @@
                     type="password"
                     class="form-control p-4 fs-7 rounded-3"
                     placeholder="請輸入新密碼"
+                    v-model="password.newPassword"
                   />
                 </div>
 
@@ -83,14 +85,21 @@
                     type="password"
                     class="form-control p-4 fs-7 rounded-3"
                     placeholder="請再輸入一次新密碼"
+                    v-model="password.checkPassword"
                   />
                 </div>
               </div>
 
               <button
-                :class="{ 'd-none': !isEditPassword }"
-                class="btn btn-neutral-40 align-self-md-start px-8 py-4 text-neutral-60 rounded-3"
+                class="btn align-self-md-start px-8 py-4 rounded-3"
                 type="button"
+                :class="[
+                  !disabledPwdBtn
+                    ? 'btn-primary-100 text-neutral-0'
+                    : 'disabled btn-neutral-40 text-neutral-60',
+                  { 'd-none': !isEditPassword },
+                ]"
+                @click="updatePwd"
               >
                 儲存設定
               </button>
@@ -124,7 +133,7 @@
                     'p-4': isEditProfile,
                   }"
                   type="text"
-                  value="Jessica Ｗang"
+                  v-model="form.name"
                 />
               </div>
 
@@ -148,7 +157,7 @@
                     'p-4': isEditProfile,
                   }"
                   type="tel"
-                  value="+886 912 345 678"
+                  v-model="form.phone"
                 />
               </div>
 
@@ -166,36 +175,33 @@
                 <span
                   class="form-control pe-none p-0 text-neutral-100 fw-bold border-0"
                   :class="{ 'd-none': isEditProfile }"
-                  >1990 年 8 月 15 日</span
+                  >{{
+                    birthdayFormat(form.birthday, 'YYYY 年 MM 月 DD 日')
+                  }}</span
                 >
                 <div class="d-flex gap-2" :class="{ 'd-none': !isEditProfile }">
                   <select
                     id="birth"
                     class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                    v-model="birth.year"
                   >
-                    <option
-                      v-for="year in 65"
-                      :key="year"
-                      value="`${year + 1958} 年`"
-                    >
+                    <option v-for="year in 65" :key="year" :value="year + 1958">
                       {{ year + 1958 }} 年
                     </option>
                   </select>
                   <select
                     class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                    v-model="birth.month"
                   >
-                    <option
-                      v-for="month in 12"
-                      :key="month"
-                      value="`${month} 月`"
-                    >
+                    <option v-for="month in 12" :key="month" :value="month">
                       {{ month }} 月
                     </option>
                   </select>
                   <select
                     class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                    v-model="birth.day"
                   >
-                    <option v-for="day in 30" :key="day" value="`${day} 日`">
+                    <option v-for="day in 30" :key="day" :value="day">
                       {{ day }} 日
                     </option>
                   </select>
@@ -216,23 +222,36 @@
                 <span
                   class="form-control pe-none p-0 text-neutral-100 fw-bold border-0"
                   :class="{ 'd-none': isEditProfile }"
-                  >高雄市新興區六角路 123 號</span
+                  >{{ cityName }}{{ areaName }}{{ form.address?.detail }}</span
                 >
+
                 <div :class="{ 'd-none': !isEditProfile }">
                   <div class="d-flex gap-2 mb-2">
                     <select
                       class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                      v-model="cityName"
                     >
-                      <option value="臺北市">臺北市</option>
-                      <option value="臺中市">臺中市</option>
-                      <option selected value="高雄市">高雄市</option>
+                      <option value="" selected disabled>請選擇</option>
+                      <option
+                        :value="city.CityName"
+                        v-for="(city, index) in cityCountyData"
+                        :key="index"
+                      >
+                        {{ city.CityName }}
+                      </option>
                     </select>
                     <select
                       class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                      v-model="form.address.zipcode"
                     >
-                      <option value="前金區">前金區</option>
-                      <option value="鹽埕區">鹽埕區</option>
-                      <option selected value="新興區">新興區</option>
+                      <option value="" selected disabled>請選擇</option>
+                      <option
+                        :value="Number(area.ZipCode)"
+                        v-for="area in areaList.AreaList"
+                        :key="area.ZipCode"
+                      >
+                        {{ area.AreaName }}
+                      </option>
                     </select>
                   </div>
                   <input
@@ -240,6 +259,7 @@
                     type="text"
                     class="form-control p-4 rounded-3"
                     placeholder="請輸入詳細地址"
+                    v-model="form.address.detail"
                   />
                 </div>
               </div>
@@ -254,9 +274,15 @@
             </button>
 
             <button
-              :class="{ 'd-none': !isEditProfile }"
-              class="btn btn-neutral-40 align-self-md-start px-8 py-4 text-neutral-60 rounded-3"
+              class="btn align-self-md-start px-8 py-4 rounded-3"
               type="button"
+              :class="[
+                !disabledUserBtn
+                  ? 'btn-primary-100 text-neutral-0'
+                  : 'disabled btn-neutral-40 text-neutral-60',
+                { 'd-none': !isEditProfile },
+              ]"
+              @click="updateUser"
             >
               儲存設定
             </button>
@@ -268,8 +294,109 @@
 </template>
 
 <script setup>
+const userStore = useUserStore();
+const { userInfo } = storeToRefs(userStore);
 const isEditPassword = ref(false);
 const isEditProfile = ref(false);
+import cityCountyData from 'public/json/cityCountyData';
+
+if (!userInfo.value._id) {
+  userStore.getUserInfo();
+}
+
+const form = ref({
+  address: {},
+});
+const password = ref({
+  oldPassword: '',
+  newPassword: '',
+  checkPassword: '',
+});
+const disabledPwdBtn = computed(() => {
+  return (
+    !password.value.oldPassword ||
+    !password.value.newPassword ||
+    !password.value.checkPassword ||
+    password.value.newPassword !== password.value.checkPassword
+  );
+});
+const updatePwd = () => {
+  userStore.updateUserInfo({
+    userId: form.value._id,
+    oldPassword: password.value.oldPassword,
+    newPassword: password.value.newPassword,
+  });
+  isEditPassword.value = !isEditPassword.value;
+};
+
+const birth = ref({
+  year: 1959,
+  month: 1,
+  day: 1,
+});
+const birthdayFormat = (timer, format = 'YYYY/MM/DD') => {
+  const year = new Date(timer).getFullYear();
+  const month = new Date(timer).getMonth() + 1;
+  const day = new Date(timer).getDate();
+
+  return timer
+    ? format.replace('YYYY', year).replace('MM', month).replace('DD', day)
+    : '';
+};
+
+const cityName = ref('');
+const areaName = ref('');
+// const areaList = ref({ AreaList: [] });
+const areaList = computed(() => {
+  return (
+    cityCountyData.find((item) => item.CityName === cityName.value) || {
+      AreaList: [],
+    }
+  );
+});
+
+watch(
+  () => userInfo.value,
+  () => {
+    form.value = JSON.parse(JSON.stringify(userInfo.value));
+
+    cityCountyData.forEach((city) => {
+      const currentCity = city.AreaList.find(
+        (area) => Number(area.ZipCode) === Number(form.value.address.zipcode)
+      );
+
+      if (currentCity) {
+        cityName.value = city.CityName;
+        areaName.value = currentCity.AreaName;
+      }
+    });
+
+    birth.value.year = new Date(form.value.birthday).getFullYear();
+    birth.value.month = new Date(form.value.birthday).getMonth() + 1;
+    birth.value.day = new Date(form.value.birthday).getDate();
+  }
+);
+
+const disabledUserBtn = computed(() => {
+  return (
+    !form.value.name ||
+    !form.value.phone ||
+    !form.value.address.zipcode ||
+    !form.value.address.detail
+  );
+});
+
+const updateUser = () => {
+  userStore.updateUserInfo({
+    userId: form.value._id,
+    name: form.value.name,
+    phone: form.value.phone,
+    name: form.value.name,
+    address: form.value.address,
+    birthday: birthdayFormat(form.value.birthday),
+  });
+  isEditProfile.value = !isEditProfile.value;
+};
 </script>
 
 <style lang="scss" scoped>
