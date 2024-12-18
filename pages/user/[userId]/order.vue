@@ -6,10 +6,11 @@
           <div
             class="rounded-3xl d-flex flex-column gap-6 gap-md-10 p-4 p-md-10 bg-neutral-0"
             style="max-width: 730px"
+            v-if="nextOrder._id"
           >
             <div>
               <p class="mb-2 text-neutral-80 fs-8 fs-md-7 fw-medium">
-                預訂參考編號： HH2302183151222
+                預訂參考編號： {{ nextOrder._id }}
               </p>
               <h2 class="mb-0 text-neutral-100 fs-7 fs-md-5 fw-bold">
                 即將來的行程
@@ -18,33 +19,47 @@
 
             <img
               class="img-fluid rounded-3"
-              src="public/images/room-a-1.png"
-              alt="room-a"
+              :src="nextOrder.roomId.imageUrl"
+              :alt="nextOrder.roomId.name"
             />
 
             <section class="d-flex flex-column gap-6">
               <h3
                 class="d-flex align-items-center mb-0 text-neutral-80 fs-8 fs-md-6 fw-bold"
               >
-                <p class="mb-0">尊爵雙人房，1 晚</p>
+                <p class="mb-0">
+                  {{ nextOrder.roomId.name }}，{{
+                    getDaysCount(nextOrder.checkInDate, nextOrder.checkOutDate)
+                  }}
+                  晚
+                </p>
                 <span
                   class="d-inline-block mx-4 bg-neutral-80"
                   style="width: 1px; height: 18px"
                 />
-                <p class="mb-0">住宿人數：2 位</p>
+                <p class="mb-0">住宿人數：{{ nextOrder.peopleNum }} 位</p>
               </h3>
 
               <div class="text-neutral-80 fs-8 fs-md-7 fw-bold">
                 <p class="title-deco mb-2">
-                  入住：6 月 10 日星期二，15:00 可入住
+                  入住：{{ timeFormat(nextOrder.checkInDate) }}，15:00 可入住
                 </p>
                 <p class="title-deco mb-0">
-                  退房：6 月 11 日星期三，12:00 前退房
+                  退房：{{ timeFormat(nextOrder.checkOutDate) }}，12:00 前退房
                 </p>
               </div>
 
               <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-bold">
-                NT$ 10,000
+                NT$
+                {{
+                  useMoneyFormat(
+                    nextOrder.roomId.price *
+                      getDaysCount(
+                        nextOrder.checkInDate,
+                        nextOrder.checkOutDate
+                      )
+                  )
+                }}
               </p>
             </section>
 
@@ -57,75 +72,20 @@
               <ul
                 class="d-flex flex-wrap row-gap-2 column-gap-10 p-6 mb-0 fs-8 fs-md-7 bg-neutral-0 border border-neutral-40 rounded-3 list-unstyled"
               >
-                <li class="flex-item d-flex gap-2">
+                <li
+                  class="flex-item d-flex gap-2"
+                  v-for="(facility, index) in nextOrder.roomId.facilityInfo"
+                  :key="index"
+                >
                   <Icon
                     class="fs-5 text-primary-100"
-                    name="material-symbols:check"
+                    :name="`material-symbols:${
+                      facility.isProvide ? 'check' : 'close'
+                    }`"
                   />
-                  <p class="mb-0 text-neutral-80 fw-bold">電視</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">吹風機</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">冰箱</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">熱水壺</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">檯燈</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">衣櫃</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">除濕機</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">浴缸</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">書桌</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">音響</p>
+                  <p class="mb-0 text-neutral-80 fw-bold">
+                    {{ facility.title }}
+                  </p>
                 </li>
               </ul>
             </section>
@@ -137,75 +97,20 @@
               <ul
                 class="d-flex flex-wrap row-gap-2 column-gap-10 p-6 mb-0 fs-8 fs-md-7 bg-neutral-0 border border-neutral-40 rounded-3 list-unstyled"
               >
-                <li class="flex-item d-flex gap-2">
+                <li
+                  class="flex-item d-flex gap-2"
+                  v-for="(amenity, index) in nextOrder.roomId.amenityInfo"
+                  :key="index"
+                >
                   <Icon
                     class="fs-5 text-primary-100"
-                    name="material-symbols:check"
+                    :name="`material-symbols:${
+                      amenity.isProvide ? 'check' : 'close'
+                    }`"
                   />
-                  <p class="mb-0 text-neutral-80 fw-bold">衛生紙</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">拖鞋</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">沐浴用品</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">清潔用品</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">刮鬍刀</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">吊衣架</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">浴巾</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">刷牙用品</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">罐裝水</p>
-                </li>
-                <li class="flex-item d-flex gap-2">
-                  <Icon
-                    class="fs-5 text-primary-100"
-                    name="material-symbols:check"
-                  />
-                  <p class="mb-0 text-neutral-80 fw-bold">梳子</p>
+                  <p class="mb-0 text-neutral-80 fw-bold">
+                    {{ amenity.title }}
+                  </p>
                 </li>
               </ul>
             </section>
@@ -224,7 +129,7 @@
                 :to="{
                   name: 'rooms-roomId',
                   params: {
-                    roomId,
+                    roomId: nextOrder.roomId._id,
                   },
                 }"
                 class="btn btn-primary-100 text-neutral-0 w-50 py-4 fw-bold"
@@ -234,6 +139,13 @@
               </NuxtLink>
             </div>
           </div>
+          <div
+            class="rounded-3xl d-flex flex-column gap-6 gap-md-10 p-4 p-md-10 bg-neutral-0"
+            style="max-width: 730px"
+            v-else
+          >
+            暫無行程
+          </div>
         </div>
         <div class="col-12 col-md-5">
           <div
@@ -241,125 +153,70 @@
           >
             <h2 class="mb-0 text-neutral-100 fs-7 fs-md-5 fw-bold">歷史訂單</h2>
 
-            <div class="d-flex flex-column flex-lg-row gap-6">
-              <img
-                class="img-fluid object-fit-cover rounded-3"
-                style="max-width: 120px; height: 80px"
-                src="public/images/room-b-sm-1.png"
-                alt="room-a"
+            <template
+              v-for="(item, index) in showMore
+                ? allOrders.filter((item) => item.status >= 0)
+                : threeOrder"
+              :key="item._id"
+            >
+              <div class="d-flex flex-column flex-lg-row gap-6">
+                <img
+                  class="img-fluid object-fit-cover rounded-3"
+                  style="max-width: 120px; height: 80px"
+                  :src="item.roomId.imageUrl"
+                  :alt="item.roomId.name"
+                />
+                <section class="d-flex flex-column gap-4">
+                  <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-medium">
+                    預訂參考編號： {{ item._id }}
+                  </p>
+
+                  <h3
+                    class="d-flex align-items-center mb-0 text-neutral-80 fs-8 fs-md-6 fw-bold"
+                  >
+                    {{ item.roomId.name }}
+                  </h3>
+
+                  <div class="text-neutral-80 fw-medium">
+                    <p class="mb-2">
+                      住宿天數：
+                      {{ getDaysCount(item.checkInDate, item.checkOutDate) }} 晚
+                    </p>
+                    <p class="mb-0">住宿人數：{{ item.peopleNum }} 位</p>
+                  </div>
+
+                  <div class="text-neutral-80 fs-8 fs-md-7 fw-medium">
+                    <p class="title-deco mb-2">
+                      入住：{{ timeFormat(item.checkInDate) }}，15:00 可入住
+                    </p>
+                    <p class="title-deco mb-0">
+                      退房：{{ timeFormat(item.checkOutDate) }}，12:00 前退房
+                    </p>
+                  </div>
+                  <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-bold">
+                    NT$
+                    {{
+                      useMoneyFormat(
+                        item.roomId.price *
+                          getDaysCount(item.checkInDate, item.checkOutDate)
+                      )
+                    }}
+                  </p>
+                </section>
+              </div>
+
+              <hr
+                class="my-0 opacity-100 text-neutral-40"
+                v-if="index !== allOrders.length - 1"
               />
-              <section class="d-flex flex-column gap-4">
-                <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-medium">
-                  預訂參考編號： HH2302183151222
-                </p>
-
-                <h3
-                  class="d-flex align-items-center mb-0 text-neutral-80 fs-8 fs-md-6 fw-bold"
-                >
-                  尊爵雙人房
-                </h3>
-
-                <div class="text-neutral-80 fw-medium">
-                  <p class="mb-2">住宿天數： 1 晚</p>
-                  <p class="mb-0">住宿人數：2 位</p>
-                </div>
-
-                <div class="text-neutral-80 fs-8 fs-md-7 fw-medium">
-                  <p class="title-deco mb-2">
-                    入住：6 月 10 日星期二，15:00 可入住
-                  </p>
-                  <p class="title-deco mb-0">
-                    退房：6 月 11 日星期三，12:00 前退房
-                  </p>
-                </div>
-                <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-bold">
-                  NT$ 10,000
-                </p>
-              </section>
-            </div>
-
-            <hr class="my-0 opacity-100 text-neutral-40" />
-
-            <div class="d-flex flex-column flex-lg-row gap-6">
-              <img
-                class="img-fluid object-fit-cover rounded-3"
-                style="max-width: 120px; height: 80px"
-                src="public/images/room-b-sm-1.png"
-                alt="room-a"
-              />
-              <section class="d-flex flex-column gap-4">
-                <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-medium">
-                  預訂參考編號： HH2302183151222
-                </p>
-
-                <h3
-                  class="d-flex align-items-center mb-0 text-neutral-80 fs-8 fs-md-6 fw-bold"
-                >
-                  尊爵雙人房
-                </h3>
-
-                <div class="text-neutral-80 fw-medium">
-                  <p class="mb-2">住宿天數： 1 晚</p>
-                  <p class="mb-0">住宿人數：2 位</p>
-                </div>
-
-                <div class="text-neutral-80 fs-8 fs-md-7 fw-medium">
-                  <p class="title-deco mb-2">
-                    入住：6 月 10 日星期二，15:00 可入住
-                  </p>
-                  <p class="title-deco mb-0">
-                    退房：6 月 11 日星期三，12:00 前退房
-                  </p>
-                </div>
-                <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-bold">
-                  NT$ 10,000
-                </p>
-              </section>
-            </div>
-
-            <hr class="my-0 opacity-100 text-neutral-40" />
-
-            <div class="d-flex flex-column flex-lg-row gap-6">
-              <img
-                class="img-fluid object-fit-cover rounded-3"
-                style="max-width: 120px; height: 80px"
-                src="public/images/room-b-sm-1.png"
-                alt="room-a"
-              />
-              <section class="d-flex flex-column gap-4">
-                <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-medium">
-                  預訂參考編號： HH2302183151222
-                </p>
-
-                <h3
-                  class="d-flex align-items-center mb-0 text-neutral-80 fs-8 fs-md-6 fw-bold"
-                >
-                  尊爵雙人房
-                </h3>
-
-                <div class="text-neutral-80 fw-medium">
-                  <p class="mb-2">住宿天數： 1 晚</p>
-                  <p class="mb-0">住宿人數：2 位</p>
-                </div>
-
-                <div class="text-neutral-80 fs-8 fs-md-7 fw-medium">
-                  <p class="title-deco mb-2">
-                    入住：6 月 10 日星期二，15:00 可入住
-                  </p>
-                  <p class="title-deco mb-0">
-                    退房：6 月 11 日星期三，12:00 前退房
-                  </p>
-                </div>
-                <p class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-bold">
-                  NT$ 10,000
-                </p>
-              </section>
-            </div>
+            </template>
 
             <button
+              v-if="!showMore"
               class="btn btn-outline-primary-100 py-4 fw-bold"
               style="--bs-btn-hover-color: #fff"
               type="button"
+              @click="showMore = true"
             >
               查看更多
             </button>
@@ -397,6 +254,8 @@
               <button
                 type="button"
                 class="btn btn-primary-100 flex-grow-1 m-0 py-4 text-white fw-bold"
+                data-bs-dismiss="modal"
+                @click="deleteOrder"
               >
                 確定取消
               </button>
@@ -410,8 +269,43 @@
 
 <script setup>
 const { $bootstrap } = useNuxtApp();
+const orderStore = useOrdersStore();
+const { allOrders } = storeToRefs(orderStore);
 
-const roomId = 'a'; // for navigation demo
+orderStore.getAllOrder();
+const threeOrder = computed(() =>
+  allOrders.value.filter((item) => item.status >= 0).slice(0, 3)
+);
+const showMore = ref(false);
+
+const nextOrder = computed(() => {
+  const sortOrder = allOrders.value
+    .sort(
+      (a, b) =>
+        new Date(a.checkInDate).valueOf() - new Date(b.checkInDate).valueOf()
+    )
+    .filter((item) => item.status >= 0);
+  return sortOrder.length ? sortOrder[0] : {};
+});
+
+const getDaysCount = (start, end) => {
+  const diff = new Date(start).valueOf() - new Date(end).valueOf();
+  return Math.abs(diff / 1000 / 60 / 60 / 24);
+};
+
+const timeFormat = (timer) => {
+  const month = new Date(timer).getMonth() + 1;
+  const date = new Date(timer).getDate();
+  const day = new Date(timer).getDay();
+  const days = ['日', '一', '二', '三', '四', '五', '六'];
+
+  return `${month} 月 ${date} 日星期${days[day]}`;
+};
+
+const deleteOrder = async () => {
+  await orderStore.deleteOrder(nextOrder.value._id);
+  orderStore.getAllOrder();
+};
 </script>
 
 <style lang="scss" scoped>
