@@ -8,9 +8,10 @@ const config : any = {
   vite: {
     server: {
       proxy: {
-        '/api': {
+        '/api/v1': {
           target: 'https://nuxr3.zeabur.app',
-          changeOrigin: true
+          changeOrigin: true,
+          rewrite: (path: any) => path.replace('/^\/api/', '')
         }
       }
     }
