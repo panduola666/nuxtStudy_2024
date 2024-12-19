@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 // TODO 註冊 和 更新 還沒做
 export const useUserStore = defineStore('user', () => {
+  const { apiUrl } = useRuntimeConfig().public;
   const userInfo = ref({});
   const isLogin = ref(false);
 
   const signup = async (body) => {
     try {
-      await $fetch('/api/v1/user/signup', {
+      await $fetch(apiUrl + '/api/v1/user/signup', {
         method: 'POST',
         body,
       });
@@ -30,7 +31,7 @@ export const useUserStore = defineStore('user', () => {
 
   const login = async (body) => {
     try {
-      const res = await $fetch('/api/v1/user/login', {
+      const res = await $fetch(apiUrl + '/api/v1/user/login', {
         method: 'POST',
         body,
       });
@@ -60,7 +61,7 @@ export const useUserStore = defineStore('user', () => {
 
   const check = async () => {
     try {
-      const res = await $fetch('/api/v1/user/check', {
+      const res = await $fetch(apiUrl + '/api/v1/user/check', {
         method: 'GET',
         headers: {
           authorization: useCookie('token').value || '',
@@ -76,7 +77,7 @@ export const useUserStore = defineStore('user', () => {
 
   const getUserInfo = async (body) => {
     try {
-      const res = await $fetch('/api/v1/user', {
+      const res = await $fetch(apiUrl + '/api/v1/user', {
         method: 'GET',
         headers: {
           authorization: useCookie('token').value || '',
@@ -88,7 +89,7 @@ export const useUserStore = defineStore('user', () => {
 
   const updateUserInfo = async (body) => {
     try {
-      const res = await $fetch('/api/v1/user', {
+      const res = await $fetch(apiUrl + '/api/v1/user', {
         method: 'PUT',
         body,
         headers: {

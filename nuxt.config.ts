@@ -5,30 +5,6 @@ const config : any = {
       apiUrl: '',
     },
   },
-  vite: {
-    server: {
-      proxy: {
-        '/api/v1': {
-          target: 'https://nuxr3.zeabur.app',
-          changeOrigin: true,
-          rewrite: (path: any) => path.replace('/^\/api/', '')
-        }
-      }
-    }
-  },
-  nitro: {
-    devProxy: {
-      '/api': {
-        target: 'https://nuxr3.zeabur.app',
-        changeOrigin: true,
-      }
-    }
-  },
-  routeRules: {
-    '/api/**': {
-      proxy: 'https://nuxr3.zeabur.app/**',
-    }
-  },
   app: {
     pageTransition: {name: 'page', mode: 'out-in'}
   },
@@ -54,15 +30,6 @@ const config : any = {
   postcss: { // CSS 屬性加上瀏覽器相容性前綴
     plugins: {
         autoprefixer: {}
-    }
-  }
-}
-
-if(process.env.NODE_ENV === 'development') {
-  config.vite.server.proxy = {
-    '/api/v1': {
-      target: 'https://nuxr3.zeabur.app',
-      changeOrigin: true
     }
   }
 }

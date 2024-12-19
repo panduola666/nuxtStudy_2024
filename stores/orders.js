@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 
 export const useOrdersStore = defineStore('orders', () => {
+  const { apiUrl } = useRuntimeConfig().public;
   const orderInfo = ref({});
   const allOrders = ref([]);
 
   const createOrder = async (body) => {
     try {
-      const data = await $fetch('/api/v1/orders', {
+      const data = await $fetch(apiUrl + '/api/v1/orders', {
         method: 'POST',
         body,
         headers: {
@@ -25,7 +26,7 @@ export const useOrdersStore = defineStore('orders', () => {
   };
 
   const getOrderInfo = async (id) => {
-    const data = await $fetch(`/api/v1/orders/${id}`, {
+    const data = await $fetch(apiUrl + `/api/v1/orders/${id}`, {
       method: 'GET',
       headers: {
         authorization: useCookie('token').value || '',
@@ -35,7 +36,7 @@ export const useOrdersStore = defineStore('orders', () => {
   };
 
   const getAllOrder = async () => {
-    const data = await $fetch(`/api/v1/orders`, {
+    const data = await $fetch(apiUrl + `/api/v1/orders`, {
       method: 'GET',
       headers: {
         authorization: useCookie('token').value || '',
@@ -46,7 +47,7 @@ export const useOrdersStore = defineStore('orders', () => {
 
   const deleteOrder = async (id) => {
     try {
-      await $fetch(`/api/v1/orders/${id}`, {
+      await $fetch(apiUrl + `/api/v1/orders/${id}`, {
         method: 'DELETE',
         headers: {
           authorization: useCookie('token').value || '',

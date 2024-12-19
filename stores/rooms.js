@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 export const useRoomsStore = defineStore('rooms', () => {
+  const { apiUrl } = useRuntimeConfig().public;
   const roomsList = ref([]);
   const roomInfo = ref({});
 
@@ -12,12 +13,12 @@ export const useRoomsStore = defineStore('rooms', () => {
   });
 
   const getData = async () => {
-    const data = await $fetch('/api/v1/rooms');
+    const data = await $fetch(apiUrl + '/api/v1/rooms');
     roomsList.value = data.result;
   };
 
   const getRoomInfo = async (id) => {
-    const data = await $fetch(`/api/v1/rooms/${id}`);
+    const data = await $fetch(apiUrl + `/api/v1/rooms/${id}`);
     roomInfo.value = data.result;
   };
 
