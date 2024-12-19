@@ -8,7 +8,7 @@ const config : any = {
   vite: {
     server: {
       proxy: {
-        '/api/v1': {
+        '/api': {
           target: 'https://nuxr3.zeabur.app',
           changeOrigin: true
         }
