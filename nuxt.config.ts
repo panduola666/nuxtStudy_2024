@@ -16,6 +16,19 @@ const config : any = {
       }
     }
   },
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'https://nuxr3.zeabur.app',
+        changeOrigin: true,
+      }
+    }
+  },
+  routeRules: {
+    '/api/**': {
+      proxy: 'https://nuxr3.zeabur.app/**',
+    }
+  },
   app: {
     pageTransition: {name: 'page', mode: 'out-in'}
   },
